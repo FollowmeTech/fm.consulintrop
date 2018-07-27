@@ -6,9 +6,9 @@ using FM.ConsulInterop.Config;
 
 namespace Client
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             InnerLogger.ConsulLog += c => Console.WriteLine(c.Content);
 
@@ -50,8 +50,27 @@ namespace Client
             {
                 Console.WriteLine(ex.ToString());
             }
+            // 重试;
+            var retryClient =
+               new ClientAgent<FM.Demo.HelloSrv.HelloSrvClient>(clientConfig,
+               new ClientAgentOption
+               {
+                   ClientCallActionCollection = new ClientCallActionCollection { new RetryMiddleware(5) }
+               });
 
-            //end 
+            for (; ; )
+            {
+                try
+                {
+                    retryClient.Proxy.Hi(new FM.Demo.HiRequest());
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.ToString());
+                }
+            }
+
+            //end
             Console.ReadLine();
         }
     }
