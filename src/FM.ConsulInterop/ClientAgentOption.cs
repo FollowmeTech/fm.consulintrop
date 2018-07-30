@@ -11,7 +11,7 @@ namespace FM.ConsulInterop
         /// <value>
         /// The client call action.
         /// </value>
-        public ClientCallActionCollection ClientCallActionCollection { get; set; }
+        public ClientCallActionCollection ClientCallActionCollection { get; set;}=new ClientCallActionCollection();
 
         /// <summary>
         /// grpc channel options

@@ -49,6 +49,7 @@ namespace FM.ConsulInterop
                 .Handle<Exception>()
                 .Retry(times, (exception, retryCount) =>
                 {
+                    InnerLogger.Log(LoggerLevel.Info, $"retry--{method}-{host}-{request}-{exception}");
                     response = callInvoker.BlockingUnaryCall(method, host, options, request);
                 });
             }
